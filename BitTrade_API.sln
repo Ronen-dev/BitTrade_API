@@ -1,7 +1,8 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BitTrade_API", "BitTrade_API\BitTrade_API.csproj", "{1630CA99-ADAE-4F1E-9F86-1BB66468593C}"
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2002
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BitTrade_API", "BitTrade_API\BitTrade_API.csproj", "{1630CA99-ADAE-4F1E-9F86-1BB66468593C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,5 +14,11 @@ Global
 		{1630CA99-ADAE-4F1E-9F86-1BB66468593C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1630CA99-ADAE-4F1E-9F86-1BB66468593C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1630CA99-ADAE-4F1E-9F86-1BB66468593C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {34BC887B-C594-4C50-876C-0A03813FDFFF}
 	EndGlobalSection
 EndGlobal
