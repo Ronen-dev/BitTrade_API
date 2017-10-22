@@ -20,47 +20,91 @@ namespace BitTrade_API.Controllers
 
             if (_context.Users.Count() == 0) {
 
-                _context.Users.Add(new User{
+                _context.Users.Add(new User {
                     Firstname = "Patrick",
                     Surname = "Abitbol",
                     Email = "patrick@abitbol.com",
                     Password = "qwerty",
-                    Apikey = "xxxxx"
+                    Apikey = "xxxxx",
+                    StatutiId = Models.User.REF_STATUT_ENABLE
                 });
                 _context.SaveChanges();
             }
         }
 
-        // GET: api/users
+        // GET: api/user   return list of Users
         [HttpGet]
-        public IEnumerable<User> Get()
+        [Route("")]
+        [Route("/")]
+        public IEnumerable<User> Get() => _context.Users.ToList();
+
+        // GET api/user/id  return user who have field id equal param id
+        [HttpGet("{id}", Name = "GetUser")]
+        public IActionResult GetById(long id)
         {
-            return _context.Users.ToList();
+            var user = _context.Users.FirstOrDefault(t => t.Id == id);
+
+            if (user == null)
+                return NotFound();
+
+            return new ObjectResult(user);  
         }
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/values
+        // POST api/user
         [HttpPost]
-        public void Post([FromBody]string value)
+        public IActionResult Create([FromBody] User client)
         {
+            var user = _context.Users.FirstOrDefault(u => u.Email == client.Email);
+
+            if (user != null || client == null) {
+                return Json(data: $"Email {client.Email} est deja utilisé.");
+            }
+            
+            _context.Users.Add(client);
+            _context.SaveChanges();
+
+            return CreatedAtRoute("GetUser", new { id = client.Id }, client);
         }
 
-        // PUT api/values/5
+        // PUT api/user/2
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        public IActionResult Update(long id, [FromBody] User client)
         {
+            if (client == null || client.Id != id)
+                return BadRequest();
+
+            var user = _context.Users.FirstOrDefault(u => u.Id == id);
+
+            if (user == null)
+                return NotFound();
+
+            user.Firstname  = client.Firstname;
+            user.Surname    = client.Surname;
+            user.Password   = client.Password;
+            user.Apikey     = client.Apikey;
+
+            _context.Users.Update(user);
+            _context.SaveChanges();
+
+            return CreatedAtRoute("GetUser", new { id = user.Id }, user);
         }
 
-        // DELETE api/values/5
+        // delete (disable) User with his Id
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(long id)
         {
+            var user = _context.Users.FirstOrDefault(u => u.Id == id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            user.StatutiId = Models.User.REF_STATUT_DISABLE;
+
+            _context.Users.Update(user);
+            _context.SaveChanges();
+
+            return CreatedAtRoute("GetUser", new { id = user.Id }, user);
         }
     }
 }
