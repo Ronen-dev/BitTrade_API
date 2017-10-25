@@ -56,37 +56,49 @@ namespace BitTrade_API.Controllers
         {
             var user = _context.Users.FirstOrDefault(u => u.Email == client.Email);
 
-            if (user != null || client == null) {
-                return Json(data: $"Email {client.Email} est deja utilisé.");
+            if (client == null)
+            {
+                return BadRequest(new { restult = -999, message = "Error Params" });
             }
-            
-            _context.Users.Add(client);
-            _context.SaveChanges();
-
-            return CreatedAtRoute("GetUser", new { id = client.Id }, client);
+            else if (user != null)
+            {
+                return BadRequest(new { restult = -1, message = $"Email {client.Email} est deja utilisé." });
+            }
+            else {
+                _context.Users.Add(client);
+                _context.SaveChanges();
+                return CreatedAtRoute("GetUser", new { id = client.Id }, client);
+            }
         }
 
         // PUT api/user/2
         [HttpPut("{id}")]
         public IActionResult Update(long id, [FromBody] User client)
         {
-            if (client == null || client.Id != id)
-                return BadRequest();
-
             var user = _context.Users.FirstOrDefault(u => u.Id == id);
 
-            if (user == null)
-                return NotFound();
+            if (client == null || client.Id != id) {
+                return BadRequest(new { restult = -999, message = "Error Params" });
+            }
+            else if (user == null)
+            {
+                return NotFound(new { restult = -1, message = "utilisateur inconnus" });
+            }
+            else if (user.Email != client.Email)
+            {
+                return NotFound(new { restult = -2, message = "Vous ne pouvez pas modifier le compte d'un autre utilisateur" });
+            }
+            else {
+                user.Firstname = client.Firstname;
+                user.Surname = client.Surname;
+                user.Password = client.Password;
+                user.Apikey = client.Apikey;
 
-            user.Firstname  = client.Firstname;
-            user.Surname    = client.Surname;
-            user.Password   = client.Password;
-            user.Apikey     = client.Apikey;
+                _context.Users.Update(user);
+                _context.SaveChanges();
 
-            _context.Users.Update(user);
-            _context.SaveChanges();
-
-            return CreatedAtRoute("GetUser", new { id = user.Id }, user);
+                return CreatedAtRoute("GetUser", new { id = user.Id }, user);
+            }
         }
 
         // delete (disable) User with his Id
