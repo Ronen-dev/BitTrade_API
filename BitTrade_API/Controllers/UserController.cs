@@ -32,11 +32,13 @@ namespace BitTrade_API.Controllers
             }
         }
 
+
         // GET: api/user   return list of Users
         [HttpGet]
         [Route("")]
         [Route("/")]
         public IEnumerable<User> Get() => _context.Users.ToList();
+
 
         // GET api/user/id  return user who have field id equal param id
         [HttpGet("{id}", Name = "GetUser")]
@@ -44,11 +46,13 @@ namespace BitTrade_API.Controllers
         {
             var user = _context.Users.FirstOrDefault(t => t.Id == id);
 
-            if (user == null)
-                return NotFound();
+            if (user == null) {
+                return NotFound(new { result = -1, message = "utilisateur inconnus" });
+            }
 
-            return new ObjectResult(user);  
+            return new ObjectResult(new { result = 1, message = "Recuperation utilisateur [OK]", user = user });  
         }
+
 
         // POST api/user
         [HttpPost]
@@ -58,18 +62,20 @@ namespace BitTrade_API.Controllers
 
             if (client == null)
             {
-                return BadRequest(new { restult = -999, message = "Error Params" });
+                return BadRequest(new { result = -999, message = "Error Params" });
             }
             else if (user != null)
             {
-                return BadRequest(new { restult = -1, message = $"Email {client.Email} est deja utilisé." });
+                return BadRequest(new { result = -1, message = $"Email {client.Email} est deja utilisé." });
             }
             else {
                 _context.Users.Add(client);
                 _context.SaveChanges();
-                return CreatedAtRoute("GetUser", new { id = client.Id }, client);
+                return new ObjectResult(new { result = 1, message = "ajout utilisateur [OK]", user = client });
+                //return CreatedAtRoute("GetUser", new { id = client.Id }, client);
             }
         }
+
 
         // PUT api/user/2
         [HttpPut("{id}")]
@@ -78,15 +84,15 @@ namespace BitTrade_API.Controllers
             var user = _context.Users.FirstOrDefault(u => u.Id == id);
 
             if (client == null || client.Id != id) {
-                return BadRequest(new { restult = -999, message = "Error Params" });
+                return BadRequest(new { result = -999, message = "Error Params" });
             }
             else if (user == null)
             {
-                return NotFound(new { restult = -1, message = "utilisateur inconnus" });
+                return NotFound(new { result = -1, message = "utilisateur inconnus" });
             }
             else if (user.Email != client.Email)
             {
-                return NotFound(new { restult = -2, message = "Vous ne pouvez pas modifier le compte d'un autre utilisateur" });
+                return NotFound(new { result = -2, message = "Vous ne pouvez pas modifier le compte d'un autre utilisateur" });
             }
             else {
                 user.Firstname = client.Firstname;
@@ -96,10 +102,10 @@ namespace BitTrade_API.Controllers
 
                 _context.Users.Update(user);
                 _context.SaveChanges();
-
-                return CreatedAtRoute("GetUser", new { id = user.Id }, user);
+                return new ObjectResult(new { result = 1, message = $"modification de l'utilisateur {user.Firstname} [OK]", user = user });
             }
         }
+
 
         // delete (disable) User with his Id
         [HttpDelete("{id}")]
@@ -108,15 +114,13 @@ namespace BitTrade_API.Controllers
             var user = _context.Users.FirstOrDefault(u => u.Id == id);
             if (user == null)
             {
-                return NotFound();
+                return NotFound(new { result = -999, message = "Error Params" });
             }
-
             user.StatutiId = Models.User.REF_STATUT_DISABLE;
 
             _context.Users.Update(user);
             _context.SaveChanges();
-
-            return CreatedAtRoute("GetUser", new { id = user.Id }, user);
+            return new ObjectResult(new { result = 1, message = $"suppression de l'utilisateur {user.Firstname} [OK]", user = user });
         }
     }
 }
