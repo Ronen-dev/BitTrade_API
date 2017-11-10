@@ -28,7 +28,8 @@ namespace BitTrade_API.Controllers
                     Email = "patrick@abitbol.com",
                     Password = Models.User.MD5Hash("qwerty"),
                     Apikey = "xxxxx",
-                    StatutId = Models.User.REF_STATUT_ENABLE
+                    Token = Models.User.GetToken(),
+                    StatutId    = Models.User.REF_STATUT_ENABLE
                 });
 
                 _context.SaveChanges();
@@ -45,14 +46,16 @@ namespace BitTrade_API.Controllers
 
 
         // GET api/user/id return Token if User is exist, we connect him
-        [HttpGet]
+        [HttpPost]
+        [Route("/user/login")]
         public IActionResult Login([FromBody] User client)
         {
+
             client.Password = Models.User.MD5Hash(client.Password);
 
-            var user = _context.Users.FirstOrDefault(u => u.Email == client.Email && u.Password == client.Password);
+            var user = _context.Users.FirstOrDefault(u => u.Email == client.Email);
 
-            if (user == null || user.StatutId == Models.User.REF_STATUT_DISABLE)
+            if (user == null || user.StatutId == Models.User.REF_STATUT_DISABLE || user.Password != client.Password)
             {
                 return NotFound(new { result = -1, message = "Email ou password incorrect !" });
             }
@@ -65,6 +68,7 @@ namespace BitTrade_API.Controllers
             user.Password = "XXX";
 
             return new ObjectResult(new { result = 1, message = "Connection utilisateur [OK]", user = user });
+            
         }
 
 
@@ -90,6 +94,7 @@ namespace BitTrade_API.Controllers
 
         // POST api/user
         [HttpPost]
+        [Route("/user/create")]
         public IActionResult Create([FromBody] User client)
         {
             var user = _context.Users.FirstOrDefault(u => u.Email == client.Email);
@@ -105,11 +110,12 @@ namespace BitTrade_API.Controllers
             else {
 
                 client.Password = Models.User.MD5Hash(client.Password);
+                client.Token = Models.User.GetToken();
 
                 _context.Users.Add(client);
                 _context.SaveChanges();
 
-                user.Password = "XXX";
+                client.Password = "XXX";
 
                 return new ObjectResult(new { result = 1, message = "ajout utilisateur [OK]", user = client });
 
