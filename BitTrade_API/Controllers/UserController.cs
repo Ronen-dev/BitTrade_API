@@ -45,19 +45,23 @@ namespace BitTrade_API.Controllers
 
 
 
-        // GET api/user/id return Token if User is exist, we connect him
+        // GET api/user/id return User if exist with Token, we connect him
         [HttpPost]
         [Route("/user/login")]
         public IActionResult Login([FromBody] User client)
         {
-
             client.Password = Models.User.MD5Hash(client.Password);
 
             var user = _context.Users.FirstOrDefault(u => u.Email == client.Email);
 
-            if (user == null || user.StatutId == Models.User.REF_STATUT_DISABLE || user.Password != client.Password)
+            if (user == null || user.StatutId == Models.User.REF_STATUT_DISABLE)
             {
-                return NotFound(new { result = -1, message = "Email ou password incorrect !" });
+                return NotFound();
+            }
+
+            if (user.Email != client.Email || user.Password != client.Password)
+            {
+                return BadRequest();
             }
 
             user.Token = Models.User.GetToken();
@@ -67,7 +71,7 @@ namespace BitTrade_API.Controllers
 
             user.Password = "XXX";
 
-            return new ObjectResult(new { result = 1, message = "Connection utilisateur [OK]", user = user });
+            return Ok(user);
             
         }
 
@@ -79,20 +83,20 @@ namespace BitTrade_API.Controllers
             var user = _context.Users.FirstOrDefault(t => t.Id == id);
 
             if (user == null) {
-                return NotFound(new { result = -1, message = "utilisateur inconnus" });
+                return NotFound();
             }
 
-            if (Models.User.TokenIsValid(user.Token) == false) {
-                return new ObjectResult(new { result = -666, message = "Go Login Page"});
-            }
+//            if (Models.User.TokenIsValid(user.Token) == false) {
+//                return BadRequest();
+//            } 
 
             user.Password = "XXX";
 
-            return new ObjectResult(new { result = 1, message = "Recuperation utilisateur [OK]", user = user });  
+            return Json(user);  
         }
 
 
-        // POST api/user
+        // POST api/user 
         [HttpPost]
         [Route("/user/create")]
         public IActionResult Create([FromBody] User client)

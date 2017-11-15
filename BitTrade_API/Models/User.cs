@@ -36,11 +36,13 @@ namespace BitTrade_API.Models
             byte[] data = Convert.FromBase64String(token);
             DateTime when = DateTime.FromBinary(BitConverter.ToInt64(data, 0));
 
+            DateTime tmp = when;
+
             if (when < DateTime.UtcNow.AddHours(-24))
             {
-                return true;
-            }
                 return false;
+            }
+                return true;
         }
 
         public static string MD5Hash(string input)
