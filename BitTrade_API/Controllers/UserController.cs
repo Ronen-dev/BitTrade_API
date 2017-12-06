@@ -43,12 +43,12 @@ namespace BitTrade_API.Controllers
 
             if (user == null || user.StatutId == Models.User.REF_STATUT_DISABLE)
             {
-                return NotFound();
+                return BadRequest(new { success = false, message = "Error Params" });
             }
 
-            if (user.Email != client.Email || user.Password != client.Password)
+            if (user.Password != client.Password)
             {
-                return BadRequest();
+                return BadRequest(new { success = false, message = " Mot de passe incorrect !" });
             }
 
             user.Token = Models.User.GetToken();
@@ -58,7 +58,7 @@ namespace BitTrade_API.Controllers
 
             user.Password = "XXX";
 
-            return Ok(user);
+            return Ok(new { success = true, message = " Utilisateur Connecté !", result = user });
             
         }
 
@@ -70,18 +70,18 @@ namespace BitTrade_API.Controllers
             var user = _context.Users.FirstOrDefault(t => t.Id == id);
 
             if (user == null) {
-                return NotFound();
+                return BadRequest(new { success = false, message = "Utilisateur inexistant !" });
             }
 
             if (Models.User.TokenIsValid(user.Token) == false) {
-                return BadRequest();
+                return BadRequest(new { success = false, message = "Utilisateur Déconnecté !" });
             } 
 
             user.Password = "XXX";
 
             Response.StatusCode = (int)HttpStatusCode.OK;
 
-            return Ok( user );
+            return Ok(new { success = true, message = " Information personnel Utilisateur!", result = user });
 
         }
 
@@ -95,11 +95,11 @@ namespace BitTrade_API.Controllers
 
             if (client == null)
             {
-                return BadRequest(new { result = -999, message = "Error Params" });
+                return BadRequest(new { success = false, message = "Error Params !" });
             }
             else if (user != null)
             {
-                return BadRequest(new { result = -1, message = $"Email {client.Email} est deja utilisé." });
+                return BadRequest(new { success = false, message = $"Email {client.Email} est deja utilisé." });
             }
             else {
 
@@ -111,7 +111,7 @@ namespace BitTrade_API.Controllers
 
                 client.Password = "XXX";
 
-                return new ObjectResult(new { result = 1, message = "ajout utilisateur [OK]", user = client });
+                return Ok(new { success = true, message = " Vous etes inscrit sur BitTrade", result = user });
 
                 //return CreatedAtRoute("GetUser", new { id = client.Id }, client);
             }
@@ -124,22 +124,18 @@ namespace BitTrade_API.Controllers
         {
             var user = _context.Users.FirstOrDefault(u => u.Id == id);
 
-            if (client == null || client.Id != id) {
-                return BadRequest(new { result = -999, message = "Error Params" });
-            }
-            else if (user == null)
-            {
-                return NotFound(new { result = -1, message = "Utilisateur inconnus" });
+            if (user == null || client == null || client.Id != id) {
+                return BadRequest(new { success = false, message = "Error Params !" });
             }
             else if (user.Email != client.Email)
             {
-                return NotFound(new { result = -2, message = "Vous ne pouvez pas modifier le compte d'un autre utilisateur" });
+                return BadRequest(new { success = false, message = "Vous ne pouvez pas modifier votre email !" });
             }
             else {
 
                 if (Models.User.TokenIsValid(user.Token) == false)
                 {
-                    return new ObjectResult(new { result = -666, message = "Go Login Page" });
+                    return BadRequest(new { success = false, message = "Utilisateur Déconnecté !" });
                 }
 
                 user.Firstname = client.Firstname;
@@ -152,7 +148,7 @@ namespace BitTrade_API.Controllers
 
                 user.Password = "XXX";
 
-                return new ObjectResult(new { result = 1, message = $"modification de l'utilisateur {user.Firstname} [OK]", user = user });
+                return Ok(new { success = true, message = $"Modification des informations enregistrées pour l'utilisateur {user.Email} [OK]", result = user });
             }
         }
 
@@ -164,12 +160,12 @@ namespace BitTrade_API.Controllers
             var user = _context.Users.FirstOrDefault(u => u.Id == id);
             if (user == null)
             {
-                return NotFound(new { result = -999, message = "Error Params" });
+                return BadRequest(new { success = false, message = "Error Params !" });
             }
 
             if (Models.User.TokenIsValid(user.Token) == false)
             {
-                return new ObjectResult(new { result = -666, message = "Go Login Page" });
+                return BadRequest(new { success = false, message = "Utilisateur Déconnecté !" });
             }
 
             user.StatutId = Models.User.REF_STATUT_DISABLE;
@@ -178,8 +174,8 @@ namespace BitTrade_API.Controllers
             _context.SaveChanges();
 
             user.Password = "XXX";
-
-            return new ObjectResult(new { result = 1, message = $"suppression de l'utilisateur {user.Firstname} [OK]", user = user });
+            
+            return Ok(new { success = true, message = $"Suppression l'utilisateur {user.Email} [OK]", result = user });
         }
     }
 }
