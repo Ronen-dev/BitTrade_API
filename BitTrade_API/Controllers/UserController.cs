@@ -73,15 +73,15 @@ namespace BitTrade_API.Controllers
                 return NotFound();
             }
 
-//            if (Models.User.TokenIsValid(user.Token) == false) {
-//                return BadRequest();
-//            } 
+            if (Models.User.TokenIsValid(user.Token) == false) {
+                return BadRequest();
+            } 
 
             user.Password = "XXX";
 
             Response.StatusCode = (int)HttpStatusCode.OK;
 
-            return Json(new { result = 1, message = " User Exist ", user });
+            return Ok( user );
 
         }
 
