@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -9,8 +10,9 @@ namespace BitTrade_API.Models
 {
     public class User
     {
-
+        [NotMapped]
         public const int REF_STATUT_ENABLE = 1;
+        [NotMapped]
         public const int REF_STATUT_DISABLE = 2;
 
         public long Id { get; set; }

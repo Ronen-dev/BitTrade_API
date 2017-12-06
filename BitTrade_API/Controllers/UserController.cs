@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using BitTrade_API.Models;
+using System.Net;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -20,20 +21,6 @@ namespace BitTrade_API.Controllers
 
             _context = context;
 
-            if (_context.Users.Count() == 0) {
-
-                _context.Users.Add(new User {
-                    Firstname = "Patrick",
-                    Surname = "Abitbol",
-                    Email = "patrick@abitbol.com",
-                    Password = Models.User.MD5Hash("qwerty"),
-                    Apikey = "xxxxx",
-                    Token = Models.User.GetToken(),
-                    StatutId    = Models.User.REF_STATUT_ENABLE
-                });
-
-                _context.SaveChanges();
-            }
         }
 
 
@@ -92,7 +79,10 @@ namespace BitTrade_API.Controllers
 
             user.Password = "XXX";
 
-            return Json(user);  
+            Response.StatusCode = (int)HttpStatusCode.OK;
+
+            return Json(new { result = 1, message = " User Exist ", user });
+
         }
 
 

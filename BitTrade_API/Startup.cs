@@ -22,12 +22,22 @@ namespace BitTrade_API
         }
 
         public IConfiguration Configuration { get; }
+        
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<BitTradeContext>(opt => opt.UseInMemoryDatabase("BitTrade"));
+            services.AddDbContext<BitTradeContext>(opt => opt.UseSqlServer(@"Server=(localdb)\MSSQLLocalDB;Database=BitTrade;Trusted_Connection=True;"));
             services.AddMvc();
+
+            services.AddMvcCore(options =>
+            {
+                options.RequireHttpsPermanent = true; 
+                options.RespectBrowserAcceptHeader = true;
+            })
+            .AddFormatterMappings()
+            .AddJsonFormatters();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
