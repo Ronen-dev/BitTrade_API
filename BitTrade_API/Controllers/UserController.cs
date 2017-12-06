@@ -20,7 +20,6 @@ namespace BitTrade_API.Controllers
         public UserController(BitTradeContext context) {
 
             _context = context;
-
         }
 
 
@@ -28,7 +27,15 @@ namespace BitTrade_API.Controllers
         [HttpGet]
         [Route("")]
         [Route("/")]
-        public IEnumerable<User> Get() => _context.Users.ToList();
+        public IActionResult GetListUser() {
+
+            List<User> Users = _context.Users.ToList();
+
+            if (Users != null) {
+                return Ok(new { success = true, message = "Liste des Utilisateurs", result = Users });
+            }
+            return BadRequest(new { success = false, message = " Error Params !" });
+        }
 
 
 
