@@ -29,10 +29,10 @@ namespace BitTrade_API.Controllers
         [Route("/")]
         public IActionResult GetListUser() {
 
-            List<User> Users = _context.Users.ToList();
+            List<User> users = _context.Users.ToList();
 
-            if (Users != null) {
-                return Ok(new { success = true, message = "Liste des Utilisateurs", result = Users });
+            if (users != null) {
+                return Ok(new { success = true, message = "Liste des Utilisateurs", result = users });
             }
             return BadRequest(new { success = false, message = " Error Params !" });
         }
@@ -63,9 +63,11 @@ namespace BitTrade_API.Controllers
             _context.Users.Update(user);
             _context.SaveChanges();
 
-            user.Password = "XXX";
+            user.Password = "";
 
-            return Ok(new { success = true, message = " Utilisateur Connecté !", result = user });
+            List<User> users = new List<User>{user};
+
+            return Ok(new { success = true, message = " Utilisateur Connecté !", result = users });
             
         }
 
@@ -84,12 +86,11 @@ namespace BitTrade_API.Controllers
                 return BadRequest(new { success = false, message = "Utilisateur Déconnecté !" });
             } 
 
-            user.Password = "XXX";
+            user.Password = "";
 
-            Response.StatusCode = (int)HttpStatusCode.OK;
+            List<User> users = new List<User> { user };
 
-            return Ok(new { success = true, message = " Information personnel Utilisateur!", result = user });
-
+            return Ok(new { success = true, message = " Information personnel Utilisateur!", result = users });
         }
 
 
@@ -116,9 +117,11 @@ namespace BitTrade_API.Controllers
                 _context.Users.Add(client);
                 _context.SaveChanges();
 
-                client.Password = "XXX";
+                client.Password = "";
 
-                return Ok(new { success = true, message = " Vous etes inscrit sur BitTrade", result = user });
+                List<User> users = new List<User> { user };
+
+                return Ok(new { success = true, message = " Vous etes inscrit sur BitTrade", result = users });
 
                 //return CreatedAtRoute("GetUser", new { id = client.Id }, client);
             }
@@ -153,9 +156,11 @@ namespace BitTrade_API.Controllers
                 _context.Users.Update(user);
                 _context.SaveChanges();
 
-                user.Password = "XXX";
+                user.Password = "";
 
-                return Ok(new { success = true, message = $"Modification des informations enregistrées pour l'utilisateur {user.Email} [OK]", result = user });
+                List<User> users = new List<User> { user };
+
+                return Ok(new { success = true, message = $"Modification des informations enregistrées pour l'utilisateur {user.Email} [OK]", result = users });
             }
         }
 
@@ -180,9 +185,11 @@ namespace BitTrade_API.Controllers
             _context.Users.Update(user);
             _context.SaveChanges();
 
-            user.Password = "XXX";
-            
-            return Ok(new { success = true, message = $"Suppression l'utilisateur {user.Email} [OK]", result = user });
+            user.Password = "";
+
+            List<User> users = new List<User> { user };
+
+            return Ok(new { success = true, message = $"Suppression l'utilisateur {user.Email} [OK]", result = users });
         }
     }
 }
