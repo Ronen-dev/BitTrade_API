@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace BitTrade_API.Models
 {
+    [NotMapped]
     public class Currencies
     {
         public bool success { get; set; }
@@ -13,6 +14,7 @@ namespace BitTrade_API.Models
         public List<Currency> result { get; set; }
     }
 
+    [NotMapped]
     public class Currency
     {
         public string MarketCurrency { get; set; }

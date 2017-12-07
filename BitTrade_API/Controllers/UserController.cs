@@ -71,6 +71,29 @@ namespace BitTrade_API.Controllers
             
         }
 
+        // GET api/user/id  return user who have field id equal param id
+        [HttpGet("{id}")]
+        [Route("/user/checktoken")]
+        public IActionResult GetTokenIsValid(long id)
+        {
+            var user = _context.Users.FirstOrDefault(t => t.Id == id);
+
+            if (user == null)
+            {
+                return BadRequest(new { success = false, message = "Utilisateur inexistant !" });
+            }
+
+            if (Models.User.TokenIsValid(user.Token) == false)
+            {
+                return BadRequest(new { success = false, message = "Utilisateur Déconnecté !" });
+            }
+
+            user.Password = "";
+
+            List<User> users = new List<User> { user };
+
+            return Ok(new { success = true, message = " Le token est toujour valide", result = users });
+        }
 
         // GET api/user/id  return user who have field id equal param id
         [HttpGet("{id}", Name = "GetUser")]
