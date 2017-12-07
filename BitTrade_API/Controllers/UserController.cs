@@ -73,7 +73,7 @@ namespace BitTrade_API.Controllers
 
         // GET api/user/id  return user who have field id equal param id
         [HttpGet("{token}")]
-        [Route("/api/user/checktoken")]
+        [Route("/api/checktoken")]
         public IActionResult GetTokenIsValid(string token)
         {
             var user = _context.Users.FirstOrDefault(t => t.Token == token);
