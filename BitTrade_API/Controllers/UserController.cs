@@ -41,7 +41,7 @@ namespace BitTrade_API.Controllers
 
         // GET api/user/id return User if exist with Token, we connect him
         [HttpPost]
-        [Route("/user/login")]
+        [Route("/api/user/login")]
         public IActionResult Login([FromBody] User client)
         {
             client.Password = Models.User.MD5Hash(client.Password);
@@ -72,11 +72,11 @@ namespace BitTrade_API.Controllers
         }
 
         // GET api/user/id  return user who have field id equal param id
-        [HttpGet("{id}")]
-        [Route("/user/checktoken")]
-        public IActionResult GetTokenIsValid(long id)
+        [HttpGet("{token}")]
+        [Route("/api/user/checktoken")]
+        public IActionResult GetTokenIsValid(string token)
         {
-            var user = _context.Users.FirstOrDefault(t => t.Id == id);
+            var user = _context.Users.FirstOrDefault(t => t.Token == token);
 
             if (user == null)
             {
@@ -119,7 +119,7 @@ namespace BitTrade_API.Controllers
 
         // POST api/user 
         [HttpPost]
-        [Route("/user/create")]
+        [Route("/api/user/create")]
         public IActionResult Create([FromBody] User client)
         {
             var user = _context.Users.FirstOrDefault(u => u.Email == client.Email);
