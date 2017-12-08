@@ -25,6 +25,9 @@ namespace BitTrade_API.Models
         public int StatutId { get; set; }
 
 
+        public List<UserCurrencies> UserCurrencies { get; set; }
+        
+
         public static string GetToken()
         {
             byte[] time = BitConverter.GetBytes(DateTime.UtcNow.ToBinary());

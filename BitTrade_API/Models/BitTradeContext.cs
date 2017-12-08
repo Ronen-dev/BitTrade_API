@@ -12,5 +12,14 @@ namespace BitTrade_API.Models
         public BitTradeContext(DbContextOptions<BitTradeContext> options) : base(options) { }
         
         public DbSet<User> Users { get; set; }
+        public DbSet<UserCurrencies> UserCurrencies { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<UserCurrencies>()
+            .HasOne(uc => uc.User)
+            .WithMany(u => u.UserCurrencies)
+            .HasForeignKey(uc => uc.UserForeignKey);
+        }
     }
 }
