@@ -142,7 +142,7 @@ namespace BitTrade_API.Controllers
 
                 client.Password = "";
 
-                List<User> users = new List<User> { user };
+                List<User> users = new List<User> { client };
 
                 return Ok(new { success = true, message = " Vous etes inscrit sur BitTrade", result = users });
 
