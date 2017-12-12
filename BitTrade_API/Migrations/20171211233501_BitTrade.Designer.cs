@@ -11,8 +11,8 @@ using System;
 namespace BitTrade_API.Migrations
 {
     [DbContext(typeof(BitTradeContext))]
-    [Migration("20171117115229_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20171211233501_BitTrade")]
+    partial class BitTrade
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -43,6 +43,30 @@ namespace BitTrade_API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("BitTrade_API.Models.UserCurrencies", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("MarketName");
+
+                    b.Property<long>("UserForeignKey");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserForeignKey");
+
+                    b.ToTable("UserCurrencies");
+                });
+
+            modelBuilder.Entity("BitTrade_API.Models.UserCurrencies", b =>
+                {
+                    b.HasOne("BitTrade_API.Models.User", "User")
+                        .WithMany("UserCurrencies")
+                        .HasForeignKey("UserForeignKey")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

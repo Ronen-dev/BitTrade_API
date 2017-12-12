@@ -74,9 +74,9 @@ namespace BitTrade_API.Controllers
         // GET api/user/id  return user who have field id equal param id
         [HttpGet("{token}")]
         [Route("/api/checktoken")]
-        public IActionResult GetTokenIsValid(string token)
+        public IActionResult GetTokenIsValid([FromBody] User client)
         {
-            var user = _context.Users.FirstOrDefault(t => t.Token == token);
+            var user = _context.Users.FirstOrDefault(t => t.Token == client.Token);
 
             if (user == null)
             {
@@ -155,10 +155,10 @@ namespace BitTrade_API.Controllers
         [HttpPut("{id}")]
         public IActionResult Update(long id, [FromBody] User client)
         {
-            var user = _context.Users.FirstOrDefault(u => u.Id == id);
+            var user = _context.Users.FirstOrDefault(u => u.Id == client.Id);
 
-            if (user == null || client == null || client.Id != id) {
-                return BadRequest(new { success = false, message = "Error Params !" });
+            if (user == null) {
+                return BadRequest(new { success = false, message = "Error Params Utilisateur inexistant !" });
             }
             else if (user.Email != client.Email)
             {

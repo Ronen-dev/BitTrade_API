@@ -23,8 +23,7 @@ namespace BitTrade_API.Models
         public string Apikey { get; set; }
         public string Token { get; set; }
         public int StatutId { get; set; }
-
-
+        
         public List<UserCurrencies> UserCurrencies { get; set; }
         
 

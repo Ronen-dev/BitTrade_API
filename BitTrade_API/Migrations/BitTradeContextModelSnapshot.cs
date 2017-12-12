@@ -43,6 +43,30 @@ namespace BitTrade_API.Migrations
 
                     b.ToTable("Users");
                 });
+
+            modelBuilder.Entity("BitTrade_API.Models.UserCurrencies", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("MarketName");
+
+                    b.Property<long>("UserForeignKey");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserForeignKey");
+
+                    b.ToTable("UserCurrencies");
+                });
+
+            modelBuilder.Entity("BitTrade_API.Models.UserCurrencies", b =>
+                {
+                    b.HasOne("BitTrade_API.Models.User", "User")
+                        .WithMany("UserCurrencies")
+                        .HasForeignKey("UserForeignKey")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
 #pragma warning restore 612, 618
         }
     }

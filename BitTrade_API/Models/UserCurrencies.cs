@@ -15,6 +15,7 @@ namespace BitTrade_API.Models
 
 
         public long UserForeignKey { get; set; }
+        [ForeignKey("UserForeignKey")]
         public User User { get; set; }
         
     }
