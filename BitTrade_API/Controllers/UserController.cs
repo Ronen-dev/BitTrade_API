@@ -155,7 +155,7 @@ namespace BitTrade_API.Controllers
         [HttpPut("{id}")]
         public IActionResult Update(long id, [FromBody] User client)
         {
-            var user = _context.Users.FirstOrDefault(u => u.Id == client.Id);
+            var user = _context.Users.FirstOrDefault(u => u.Id == id);
 
             if (user == null) {
                 return BadRequest(new { success = false, message = "Error Params Utilisateur inexistant !" });
