@@ -29,7 +29,7 @@ namespace BitTrade_API.Controllers
                 return BadRequest(new { success = false, message = " Error Params !" });
             }
 
-            List<UserCurrencies> listeFavoris = _context.UserCurrencies.Where(m => m.UserForeignKey == id).ToList();
+            List<UserCurrencies> listeFavoris = _context.UserCurrencies.Where(m => m.UserForeignKey == id).GroupBy(m => m.MarketName).Select(x => x.First()).ToList();
 
             if ( listeFavoris == null || listeFavoris.Count() < 1 )
             {
