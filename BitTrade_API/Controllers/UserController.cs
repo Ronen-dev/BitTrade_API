@@ -166,7 +166,7 @@ namespace BitTrade_API.Controllers
             }
             else {
 
-                if (Models.User.TokenIsValid(user.Token) == false)
+                if (Models.User.TokenIsValid(client.Token) == false)
                 {
                     return BadRequest(new { success = false, message = "Utilisateur Déconnecté !" });
                 }
