@@ -24,12 +24,8 @@ namespace BitTrade_API.Controllers
         [HttpGet("{id}", Name = "GetFavoris")]
         public IActionResult GetById(long id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(new { success = false, message = " Error Params !" });
-            }
 
-            List<UserCurrencies> listeFavoris = _context.UserCurrencies.Where(m => m.UserForeignKey == id).GroupBy(m => m.MarketName).Select(x => x.First()).ToList();
+            List<UserCurrencies> listeFavoris = _context.UserCurrencies.Where(m => m.UserForeignKey == id).GroupBy(m => m.MarketName).Select(m => m.First()).ToList();
 
             if ( listeFavoris == null || listeFavoris.Count() < 1 )
             {
@@ -44,10 +40,6 @@ namespace BitTrade_API.Controllers
         [HttpPost]
         public IActionResult PostUserCurrencies([FromBody] UserCurrencies userCurrencies)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(new { success = false, message = " Error Params Favoris !" });
-            }
 
             _context.UserCurrencies.Add(userCurrencies);
             _context.SaveChangesAsync();
