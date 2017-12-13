@@ -44,9 +44,9 @@ namespace BitTrade_API.Models
 
             if (when < DateTime.UtcNow.AddHours(-24))
             {
-                return false;
-            }
                 return true;
+            }
+                return false;
         }
 
         public static string MD5Hash(string input)

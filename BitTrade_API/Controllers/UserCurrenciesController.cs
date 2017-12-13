@@ -52,7 +52,9 @@ namespace BitTrade_API.Controllers
             _context.UserCurrencies.Add(userCurrencies);
             _context.SaveChangesAsync();
 
-            return Ok(new { success = true, message = "Crypto ajouté aux Favoris", result = userCurrencies });
+            List<UserCurrencies> favoris = new List<UserCurrencies> { userCurrencies };
+
+            return Ok(new { success = true, message = "Crypto ajouté aux Favoris", result = favoris });
         }
 
 
