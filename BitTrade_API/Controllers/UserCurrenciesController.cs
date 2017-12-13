@@ -25,7 +25,10 @@ namespace BitTrade_API.Controllers
         public IActionResult GetById(long id)
         {
 
-            List<UserCurrencies> listeFavoris = _context.UserCurrencies.Where(m => m.UserForeignKey == id).GroupBy(m => m.MarketName).Select(m => m.First()).ToList();
+            List<UserCurrencies> listeFavoris = _context.UserCurrencies.Where(m => m.UserForeignKey == id).ToList();
+
+
+            //            List<UserCurrencies> listeFavoris = _context.UserCurrencies.Where(m => m.UserForeignKey == id).GroupBy(m => m.MarketName).Select(m => m.First()).ToList();
 
             if ( listeFavoris == null || listeFavoris.Count() < 1 )
             {
