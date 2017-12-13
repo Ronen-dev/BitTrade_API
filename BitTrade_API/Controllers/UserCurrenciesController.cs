@@ -26,9 +26,8 @@ namespace BitTrade_API.Controllers
         {
 
             List<UserCurrencies> listeFavoris = _context.UserCurrencies.Where(m => m.UserForeignKey == id).ToList();
-
-
-            //            List<UserCurrencies> listeFavoris = _context.UserCurrencies.Where(m => m.UserForeignKey == id).GroupBy(m => m.MarketName).Select(m => m.First()).ToList();
+            
+            //List<UserCurrencies> listeFavoris = _context.UserCurrencies.Where(m => m.UserForeignKey == id).GroupBy(m => m.MarketName).Select(m => m.First()).ToList();
 
             if ( listeFavoris == null || listeFavoris.Count() < 1 )
             {
@@ -41,11 +40,11 @@ namespace BitTrade_API.Controllers
 
         // POST: api/UserCurrencies
         [HttpPost]
-        public IActionResult PostUserCurrencies([FromBody] UserCurrencies userCurrencies)
+        public async Task<IActionResult> PostUserCurrenciesAsync([FromBody] UserCurrencies userCurrencies)
         {
 
             _context.UserCurrencies.Add(userCurrencies);
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
             List<UserCurrencies> favoris = new List<UserCurrencies> { userCurrencies };
 
@@ -53,7 +52,6 @@ namespace BitTrade_API.Controllers
         }
 
 
-        
         // DELETE: api/UserCurrencies/5
         [HttpDelete("{id}")]
         public IActionResult DeleteUserCurrencies([FromRoute] long id)
